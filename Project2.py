@@ -25,23 +25,24 @@ def get_titles_from_search_results(filename):
 
     soup = BeautifulSoup(url, 'html.parser')
 
-    tags = soup.find_all('a', class_= 'bookTitle')
     title_list = []
-    for tag in tags:
-        span = tag.find('span')
+    author_list = []
+
+    items = soup.find_all(itemtype="http://schema.org/Book")
+    for item in items:
+        tag1 = item.find('a', class_= 'bookTitle')
+        span = tag1.find('span')
         title = span.get_text()
         title = title.strip()
         title_list.append(title)
-    
-    tags = soup.find_all('div', class_= 'authorName__container')
-    author_list = []
-    for tag in tags:
-        span = tag.find('span')
+
+        tag2 = item.find('div', class_= 'authorName__container')
+        span = tag2.find('span')
         author = span.get_text()
         author = author.strip()
         author_list.append(author)
-     
-    # loop through each book 
+        
+
    
     for i in range(len(title_list)):
         tup = (title_list[i], author_list[i])
@@ -50,7 +51,6 @@ def get_titles_from_search_results(filename):
 
     return info_list
 
-    pass
 
 def get_search_links():
     """
@@ -127,7 +127,7 @@ def get_book_summary(book_url):
 
     return summary_tuple
     
-    pass
+  
 
 def summarize_best_books(filepath):
     """
