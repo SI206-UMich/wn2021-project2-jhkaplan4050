@@ -5,6 +5,9 @@ import os
 import csv
 import unittest
 
+# Project by: Julia Kaplan
+# Worked on the project with Yonit Robin & Emma Tenner 
+
 
 def get_titles_from_search_results(filename):
     """
@@ -199,7 +202,14 @@ def write_csv(data, filename):
 
     This function should not return anything.
     """
-    pass
+
+    with open(filename, 'w') as f:
+        csv_writer = csv.writer(f)
+        csv_writer.writerow(['Book Title','Author Name'])
+        for value in data:
+            book_title = value[0]
+            author_name = value[1]
+            csv_writer.writerow([book_title, author_name])
 
 
 def extra_credit(filepath):
@@ -280,7 +290,7 @@ class TestCases(unittest.TestCase):
             # check that the third element in the tuple, i.e. pages is an int
             element_three_type = type(summary[2])
             self.assertEqual(element_three_type, int)
-            # check that the first book in the search has 337 pages
+        # check that the first book in the search has 337 pages
         self.assertEqual(book_summary_list[0][2], 337)
 
 
@@ -311,20 +321,24 @@ class TestCases(unittest.TestCase):
 
     def test_write_csv(self):
         # call get_titles_from_search_results on search_results.htm and save the result to a variable
-
+        titles = get_titles_from_search_results("search_results.htm")
         # call write csv on the variable you saved and 'test.csv'
-
+        write_csv(titles, "test.csv")
         # read in the csv that you wrote (create a variable csv_lines - a list containing all the lines in the csv you just wrote to above)
-
-
+        csv_lines = []
+        with open('test.csv', 'r') as f:
+            read_csv = csv.reader(f)
+            for line in read_csv:
+                csv_lines.append(', '.join(line))
         # check that there are 21 lines in the csv
-
+        self.assertEqual(len(csv_lines), 21)
         # check that the header row is correct
-
+        self.assertEqual(csv_lines[0], 'Book Title, Author Name')
         # check that the next row is 'Harry Potter and the Deathly Hallows (Harry Potter, #7)', 'J.K. Rowling'
-
+        self.assertEqual(csv_lines[1], 'Harry Potter and the Deathly Hallows (Harry Potter, #7), J.K. Rowling')
         # check that the last row is 'Harry Potter: The Prequel (Harry Potter, #0.5)', 'J.K. Rowling'
-        pass
+        self.assertEqual(csv_lines[-1], 'Harry Potter: The Prequel (Harry Potter, #0.5), J.K. Rowling')
+        
 
 
 
