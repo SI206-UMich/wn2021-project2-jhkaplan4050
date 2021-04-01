@@ -203,13 +203,10 @@ def write_csv(data, filename):
     This function should not return anything.
     """
 
-    with open(filename, 'w') as f:
-        csv_writer = csv.writer(f)
-        csv_writer.writerow(['Book Title','Author Name'])
-        for value in data:
-            book_title = value[0]
-            author_name = value[1]
-            csv_writer.writerow([book_title, author_name])
+    with open(filename, 'w', newline= '') as f:
+        write = csv.writer(f)
+        write.writerow(('Book title','Author Name'))
+        write.writerows(data)
 
 
 def extra_credit(filepath):
@@ -264,7 +261,8 @@ class TestCases(unittest.TestCase):
                 url_type_list.append(url_type)
         self.assertEqual(len(url_type_list), 10)
         # check that each URL contains the correct url for Goodreads.com followed by /book/show/ `              # how do you do this`
-        
+        for url in urls:
+            self.assertTrue(url.startswith('https://www.goodreads.com/book/show/'))
 
 
     def test_get_book_summary(self):
@@ -327,17 +325,18 @@ class TestCases(unittest.TestCase):
         # read in the csv that you wrote (create a variable csv_lines - a list containing all the lines in the csv you just wrote to above)
         csv_lines = []
         with open('test.csv', 'r') as f:
-            read_csv = csv.reader(f)
-            for line in read_csv:
-                csv_lines.append(', '.join(line))
+            lines = csv.reader(f)
+            for line in lines:
+                csv_lines.append(line)
         # check that there are 21 lines in the csv
         self.assertEqual(len(csv_lines), 21)
         # check that the header row is correct
-        self.assertEqual(csv_lines[0], 'Book Title, Author Name')
+        self.assertEqual(csv_lines[0][0], 'Book title')
+        self.assertEqual(csv_lines[0][1], 'Author Name')
         # check that the next row is 'Harry Potter and the Deathly Hallows (Harry Potter, #7)', 'J.K. Rowling'
-        self.assertEqual(csv_lines[1], 'Harry Potter and the Deathly Hallows (Harry Potter, #7), J.K. Rowling')
+        self.assertEqual(csv_lines[1], ['Harry Potter and the Deathly Hallows (Harry Potter, #7)', 'J.K. Rowling'])
         # check that the last row is 'Harry Potter: The Prequel (Harry Potter, #0.5)', 'J.K. Rowling'
-        self.assertEqual(csv_lines[-1], 'Harry Potter: The Prequel (Harry Potter, #0.5), J.K. Rowling')
+        self.assertEqual(csv_lines[-1], ['Harry Potter: The Prequel (Harry Potter, #0.5)', 'J.K. Rowling'])
         
 
 
